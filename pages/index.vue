@@ -48,7 +48,7 @@
           <img
             v-if="item.Poster"
             :src="item.Poster"
-            alt="item.Title">
+            :alt="item.Title">
           <p
             v-if="!item.Poster && item.Title"
             class="no-img">

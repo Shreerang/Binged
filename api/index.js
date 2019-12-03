@@ -17,7 +17,11 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
   fs.createReadStream(file.path)
     .pipe(csv())
     .on('data', d => {
-      if (d.Date.split('/')[2] === '19') results.push(d)
+      console.log(typeof d.Date === 'string')
+      if (typeof d.Date === 'string' && d.Date.split('/')[2] === '19') {
+        console.log(d)
+        results.push(d)
+      }
     })
     .on('end', async () => {
       results.map(item => {
@@ -149,9 +153,9 @@ async function fetchDetails(array) {
         Object.assign(
           {},
           {
-            Title: response.data.name
-              ? response.data.name
-              : response.data.title,
+            Title: response.data.title
+              ? response.data.title
+              : response.data.name,
             Poster:
               'http://image.tmdb.org/t/p/w300' + response.data.poster_path,
             RunTime: response.data.episode_run_time
