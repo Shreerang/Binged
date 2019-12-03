@@ -1,6 +1,6 @@
 <template>
   <section>
-    <!-- <h1 class="logo">Binged 📺</h1> -->
+    <h1 class="logo">Binged 📺</h1>
   </section>
 </template>
 
@@ -15,6 +15,6 @@ export default {
   color: #42b983;
   text-align: center;
   padding: 0.5em;
-  font-size: 2em;
+  font-size: 2.5em;
 }
 </style>

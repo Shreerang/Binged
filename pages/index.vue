@@ -1,12 +1,44 @@
 <template>
-  <section>
+  <section class="content">
     <div v-if="movies.length > 0">
       <Grid :columns="1">
         <GridItem>
-          <p
-            class="time-intro"
-          >The approximate time you spent in 2018 watching various shows and movies on Netflix!</p>
           <p class="time">{{ convertMinutes(movies[movies.length - 1].totalTime) }}</p>
+          <social-sharing
+            :description="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix Want to know how much you Binged!'"
+            :title="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix Want to know how much you Binged!'"
+            :quote="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix Want to know how much you Binged!'"
+            url = ""
+            hashtags="binged, netflix"
+            inline-template>
+            <div>
+              <network network="facebook">
+                <span style="font-size: 1.5em; color: #3b5998; padding: 0 10px;">
+                  <i class="fab fa-facebook-f" />
+                </span>
+              </network>
+              <network network="pinterest">
+                <span style="font-size: 1.5em; color: #bd081c; padding: 0 10px;">
+                  <i class="fab fa-pinterest-p" />
+                </span>
+              </network>
+              <network network="reddit">
+                <span style="font-size: 1.5em; color: #ff4500; padding: 0 10px;">
+                  <i class="fab fa-reddit-alien" />
+                </span>
+              </network>
+              <network network="twitter">
+                <span style="font-size: 1.5em; color: #55acee; padding: 0 10px;">
+                  <i class="fab fa-twitter" />
+                </span>
+              </network>
+              <network network="whatsapp">
+                <span style="font-size: 1.5em; color: #43d854; padding: 0 10px;">
+                  <i class="fab fa-whatsapp" />
+                </span>
+              </network>
+            </div>
+          </social-sharing>
         </GridItem>
       </Grid>
       <Grid :columns="{xs: 3, sm: 4, md: 5, lg: 6}">
@@ -25,7 +57,7 @@
         </GridItem>
       </Grid>
     </div>
-    <p>
+    <p class="instructions">
       Steps to get your viewing history from Netflix!
     </p>
     <ol>
@@ -37,13 +69,27 @@
       <li>You will see your viewing history; latest first. Scroll to the bottom and click on the "Download all" link.</li>
       <li>This will download a CSV file which you can upload here.</li>
     </ol>
-    <Grid :columns="1">
+    <Grid :columns="{xs: 1, sm: 3, md: 3, lg: 3}">
+      <GridItem>
+        &nbsp;
+      </GridItem>
       <GridItem>
         <input
           id="myfile"
           type="file"
           name="myfile"
           @change="uploadFile($event)">
+      </GridItem>
+      <GridItem>
+        &nbsp;
+      </GridItem>
+    </Grid>
+    <Grid :columns="1">
+      <GridItem>
+        <rise-loader
+          :color="`#42b983`"
+          :loading="spinner"
+          :size="20" />
       </GridItem>
     </Grid>
   </section>
@@ -53,19 +99,29 @@
 import axios from 'axios'
 import Grid from '~/components/Grid/Grid'
 import GridItem from '~/components/Grid/GridItem'
+import { RiseLoader } from '@saeris/vue-spinners'
+import SocialSharing from 'vue-social-sharing'
+
 export default {
+  head() {
+    return {
+      script: [
+        {
+          src: 'https://kit.fontawesome.com/b265f8faad.js'
+        }
+      ]
+    }
+  },
   components: {
     Grid,
-    GridItem
+    GridItem,
+    RiseLoader,
+    SocialSharing
   },
-  // asyncData({ params }) {
-  //   return axios.get(`/api/random-movie`).then(res => {
-  //     return { movies: res.data }
-  //   })
-  // },
   data() {
     return {
-      movies: []
+      movies: [],
+      spinner: false
     }
   },
   methods: {
@@ -97,10 +153,12 @@ export default {
         }
       }
       const self = this
+      self.spinner = true
       return axios
         .post('/api/upload', formData, options)
         .then(function(response) {
           self.movies = response.data
+          self.spinner = false
         })
         .catch(function(error) {
           console.log(error)
@@ -111,6 +169,10 @@ export default {
 </script>
 
 <style>
+.content {
+  min-height: calc(100vh - 76px - 106px);
+}
+
 img {
   width: 100%;
 }
@@ -122,6 +184,7 @@ img {
 .time {
   font-weight: bold;
   font-size: 3em;
+  color: #42b983;
 }
 
 .no-img {
@@ -130,5 +193,15 @@ img {
   background-color: #ddd;
   height: 100%;
   padding: 25px 0;
+}
+
+.instructions {
+  padding: 0 10px;
+}
+
+input[type='file'] {
+  border: solid 1px #42b983;
+  padding: 10px 10px;
+  color: #42b983;
 }
 </style>

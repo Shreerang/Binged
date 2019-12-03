@@ -7,98 +7,6 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// function chunk(arr, chunkSize) {
-//   var R = []
-//   for (var i = 0, len = arr.length; i < len; i += chunkSize)
-//     R.push(arr.slice(i, i + chunkSize))
-//   return R
-// }
-
-async function processArray(array) {
-  const axios = require('axios')
-  const shows = []
-  const bingeList = []
-  for (const item of array) {
-    let encodedShowName = encodeURI(item.Title)
-    shows.push(
-      axios
-        .get(
-          'https://api.themoviedb.org/3/search/multi?api_key=56fb51d8828629a99b8cf9c40227b0e1&query=' +
-            encodedShowName
-        )
-        .catch(function(error) {
-          console.log(error)
-        })
-    )
-  }
-  await axios.all(shows).then(function(results) {
-    results.forEach(function(response, index) {
-      if (response.data.results.length > 0) {
-        bingeList.push(
-          Object.assign(
-            {},
-            {
-              Title: response.data.results[0].name
-                ? response.data.results[0].name
-                : response.data.results[0].title,
-              show_id: response.data.results[0].id,
-              media_type: response.data.results[0].media_type
-            },
-            array[index]
-          )
-        )
-      } else {
-        console.log('Did not find anything', response.data.results)
-      }
-    })
-  })
-  console.log(bingeList)
-  return bingeList
-}
-
-async function fetchDetails(array) {
-  console.log(array)
-  const axios = require('axios')
-  const shows = []
-  const bingeList = []
-  for (const item of array) {
-    shows.push(
-      axios
-        .get(
-          'https://api.themoviedb.org/3/' +
-            item.media_type +
-            '/' +
-            item.show_id +
-            '?api_key=56fb51d8828629a99b8cf9c40227b0e1'
-        )
-        .catch(function(error) {
-          console.log(error)
-        })
-    )
-  }
-  await axios.all(shows).then(function(results) {
-    results.forEach(function(response, index) {
-      bingeList.push(
-        Object.assign(
-          {},
-          {
-            Title: response.data.name
-              ? response.data.name
-              : response.data.title,
-            Poster:
-              'http://image.tmdb.org/t/p/w300' + response.data.poster_path,
-            RunTime: response.data.episode_run_time
-              ? response.data.episode_run_time[0]
-              : response.data.runtime
-          },
-          array[index]
-        )
-      )
-    })
-  })
-  return bingeList
-}
-
 app.post('/upload', upload.single('myfile'), (req, res, next) => {
   const csv = require('csv-parser')
   const fs = require('fs')
@@ -109,7 +17,7 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
   fs.createReadStream(file.path)
     .pipe(csv())
     .on('data', d => {
-      results.push(d)
+      if (d.Date.split('/')[2] === '19') results.push(d)
     })
     .on('end', async () => {
       results.map(item => {
@@ -150,7 +58,6 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
       }
       // At this point we have the final array of all shows and movies with their count
 
-      // const chunkedArray = chunk(finalResult, 20)
       const netflix = await processArray(finalResult)
       const finalNetflix = await fetchDetails(netflix)
       let time = 0
@@ -161,24 +68,103 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
       }
       finalNetflix.push({ totalTime: time })
       res.json(finalNetflix)
-      // res.json(finalResult)
     })
 })
 
-// var loopInc = 0
-// function processChunkedArray(chunkedArray) {
-//   const netflix = []
-//   setTimeout(function() {
-//     const contents = processArray(chunkedArray[loopInc])
-//     loopInc++
-//     if (loopInc < chunkedArray.length) {
-//       processChunkedArray(chunkedArray)
-//     }
-//     console.log('We have it!', contents)
-//   }, 10000)
-//   console.log('Done!')
-//   return netflix
-// }
+async function processArray(array) {
+  const axios = require('axios')
+  const rateLimit = require('axios-rate-limit')
+  const http = rateLimit(axios.create(), {
+    maxRequests: 3,
+    perMilliseconds: 1000
+  })
+  http.getMaxRPS()
+  const shows = []
+  const bingeList = []
+  for (const item of array) {
+    let encodedShowName = encodeURI(item.Title)
+    shows.push(
+      http
+        .get(
+          'https://api.themoviedb.org/3/search/multi?api_key=56fb51d8828629a99b8cf9c40227b0e1&query=' +
+            encodedShowName
+        )
+        .catch(function(error) {
+          console.log(error)
+        })
+    )
+  }
+  await axios.all(shows).then(function(results) {
+    results.forEach(function(response, index) {
+      if (response.data.results.length > 0) {
+        bingeList.push(
+          Object.assign(
+            {},
+            {
+              Title: response.data.results[0].name
+                ? response.data.results[0].name
+                : response.data.results[0].title,
+              show_id: response.data.results[0].id,
+              media_type: response.data.results[0].media_type
+            },
+            array[index]
+          )
+        )
+      } else {
+        console.log('Did not find anything', response.data.results)
+      }
+    })
+  })
+  return bingeList
+}
+
+async function fetchDetails(array) {
+  const axios = require('axios')
+  const rateLimit = require('axios-rate-limit')
+  const http = rateLimit(axios.create(), {
+    maxRequests: 3,
+    perMilliseconds: 1000
+  })
+  http.getMaxRPS()
+  const shows = []
+  const bingeList = []
+  for (const item of array) {
+    shows.push(
+      http
+        .get(
+          'https://api.themoviedb.org/3/' +
+            item.media_type +
+            '/' +
+            item.show_id +
+            '?api_key=56fb51d8828629a99b8cf9c40227b0e1'
+        )
+        .catch(function(error) {
+          console.log(error)
+        })
+    )
+  }
+  await axios.all(shows).then(function(results) {
+    results.forEach(function(response, index) {
+      bingeList.push(
+        Object.assign(
+          {},
+          {
+            Title: response.data.name
+              ? response.data.name
+              : response.data.title,
+            Poster:
+              'http://image.tmdb.org/t/p/w300' + response.data.poster_path,
+            RunTime: response.data.episode_run_time
+              ? response.data.episode_run_time[0]
+              : response.data.runtime
+          },
+          array[index]
+        )
+      )
+    })
+  })
+  return bingeList
+}
 
 // export the server middleware
 module.exports = {

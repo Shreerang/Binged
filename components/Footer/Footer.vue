@@ -1,10 +1,10 @@
 <template>
   <section class="footer">
     <p class="copy">
-      Made with ❤️ by Shreerang Patwardhan
+      Made with ❤️and for fun by <a href="https://twitter.com/shreerangp">Shreerang Patwardhan</a>
     </p>
     <p class="copy">
-      Data provided by free API provided by theMovieDB
+      Data fetched from free API provided by <a href="https://www.themoviedb.org/">theMovieDB</a>
     </p>
   </section>
 </template>
@@ -21,7 +21,7 @@ export default {
 }
 
 .copy {
-  font-size: 12px;
+  font-size: 0.8em;
   text-align: center;
   margin: 5px 0;
 }

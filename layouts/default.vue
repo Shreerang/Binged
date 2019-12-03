@@ -21,7 +21,7 @@ export default {
 <style>
 html {
   font-family: Avenir, 'Helvetica', 'Arial', 'sans-serif';
-  font-size: 16px;
+  font-size: 1.125em;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
