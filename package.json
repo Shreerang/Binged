@@ -29,6 +29,7 @@
     "vue-spinner": "^1.0.3"
   },
   "devDependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
     "babel-eslint": "^8.2.1",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^3.6.0",

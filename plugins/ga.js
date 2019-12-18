@@ -30,6 +30,6 @@ export default ({ app }) => {
   /*
     ** Set the current page
     */
-  ga('create', 'UA-154707515-1', 'auto')
+  ga('create', process.env.GA_KEY, 'auto')
   ga('send', 'pageview', 'Home')
 }

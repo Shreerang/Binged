@@ -193,7 +193,7 @@ async function fetchDetails(array) {
             item.media_type +
             '/' +
             item.show_id +
-            '?api_key=56fb51d8828629a99b8cf9c40227b0e1'
+            '?api_key=' + process.env.API_KEY
         )
         .catch(function(error) {
           console.log(error)
