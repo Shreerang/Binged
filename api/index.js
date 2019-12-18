@@ -66,7 +66,7 @@ const extendTimeoutMiddleware = (req, res, next) => {
         }
 
         res.write(space)
-        // console.log('in here')
+        console.log('in here')
         // Wait another 15 seconds
         waitAndSend()
       }
