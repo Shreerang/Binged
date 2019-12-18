@@ -68,14 +68,21 @@
       </Grid>
     </div>
     <p class="instructions">
+      Do you feel like you spend a lot of time watching <span class="hashtag">#Netflix</span>? If yes, then it's time to find out exactly how much!
+    </p>
+    <br>
+    <p class="instructions">
       Steps to get your viewing history from Netflix!
     </p>
     <ol>
-      <li>Go to <a href="https://www.netflix.com/browse">netflix.com</a></li>
+      <li>Go to <a
+        href="https://www.netflix.com/browse"
+        onclick="ga(‘send’, ‘event’, 'Netflix', 'Redirect');"
+        target="_blank">netflix.com</a></li>
       <li>Click on your profile</li>
-      <li>Hower over your avatar icon in the top right corner</li>
+      <li>Hover over your avatar icon in the top right corner</li>
       <li>Click on Account</li>
-      <li>Scroll to the bottom until you see the "Viewing Activity". Click the link.</li>
+      <li>Scroll to the bottom until you see "Viewing Activity". Click the link.</li>
       <li>You will see your viewing history; latest first. Scroll to the bottom and click on the "Download all" link.</li>
       <li>This will download a CSV file which you can upload here.</li>
     </ol>
@@ -94,7 +101,9 @@
         &nbsp;
       </GridItem>
     </Grid>
-    <Grid :columns="1">
+    <Grid
+      :columns="1"
+      style="padding: 15px 0">
       <GridItem>
         <rise-loader
           :color="`#42b983`"
@@ -115,6 +124,35 @@ import SocialSharing from 'vue-social-sharing'
 export default {
   head() {
     return {
+      title:
+        'Binged' +
+        ' - ' +
+        ' Know how much time you have spent watching Netflix in 2019',
+      meta: [
+        {
+          charset: 'utf-8'
+        },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1'
+        },
+        {
+          name: 'keywords',
+          content:
+            'Netflix, Binged, binge watch, binge watching, resolutions 2020'
+        },
+        {
+          name: 'description',
+          content:
+            'If you are making your resolutions for 2020 and think that you spend' +
+            ' a lot of time watching Netflix and want to reduce your screen time in 2020,' +
+            ' know exactly how much time you spent binge watching movies and series on Netflix.'
+        },
+        {
+          property: 'og:image',
+          content: '/Binged.png'
+        }
+      ],
       script: [
         {
           src: 'https://kit.fontawesome.com/b265f8faad.js'
@@ -212,6 +250,16 @@ img {
 input[type='file'] {
   border: solid 1px #42b983;
   padding: 10px 10px;
+}
+
+p.instructions,
+ol {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hashtag {
+  font-weight: bold;
   color: #42b983;
 }
 </style>
