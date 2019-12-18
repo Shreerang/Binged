@@ -31,7 +31,7 @@ const extendTimeoutMiddleware = (req, res, next) => {
   let isDataSent = false
 
   // Only extend the timeout for API requests
-  if (!req.url.includes('/api')) {
+  if (!req.url.includes('/upload')) {
     next()
     return
   }
@@ -66,7 +66,7 @@ const extendTimeoutMiddleware = (req, res, next) => {
         }
 
         res.write(space)
-
+        // console.log('in here')
         // Wait another 15 seconds
         waitAndSend()
       }
@@ -171,7 +171,8 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
         }
       }
       finalNetflix.push({ totalTime: time })
-      res.json(finalNetflix)
+      res.write(JSON.stringify(finalNetflix))
+      res.end()
     })
 })
 
