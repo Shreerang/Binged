@@ -5,36 +5,46 @@
         <GridItem>
           <p class="time">{{ convertMinutes(movies[movies.length - 1].totalTime) }}</p>
           <social-sharing
-            :description="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix Want to know how much you Binged!'"
-            :title="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix Want to know how much you Binged!'"
-            :quote="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix Want to know how much you Binged!'"
-            url = ""
-            hashtags="binged, netflix"
+            :description="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
+            :title="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
+            :quote="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
+            url = "https://binged.herokuapp.com"
+            hashtags="binged, netflix, 2019"
             inline-template>
             <div>
               <network network="facebook">
                 <span style="font-size: 1.5em; color: #3b5998; padding: 0 10px;">
-                  <i class="fab fa-facebook-f" />
+                  <i
+                    class="fab fa-facebook-f"
+                    onclick="ga(‘send’, ‘event’, 'Social Share', 'Facebook Share');" />
                 </span>
               </network>
               <network network="pinterest">
                 <span style="font-size: 1.5em; color: #bd081c; padding: 0 10px;">
-                  <i class="fab fa-pinterest-p" />
+                  <i
+                    class="fab fa-pinterest-p"
+                    onclick="ga(‘send’, ‘event’, 'Social Share', 'Pinterest Share');" />
                 </span>
               </network>
               <network network="reddit">
                 <span style="font-size: 1.5em; color: #ff4500; padding: 0 10px;">
-                  <i class="fab fa-reddit-alien" />
+                  <i
+                    class="fab fa-reddit-alien"
+                    onclick="ga(‘send’, ‘event’, 'Social Share', 'Reddit Share');" />
                 </span>
               </network>
               <network network="twitter">
                 <span style="font-size: 1.5em; color: #55acee; padding: 0 10px;">
-                  <i class="fab fa-twitter" />
+                  <i
+                    class="fab fa-twitter"
+                    onclick="ga(‘send’, ‘event’, 'Social Share', 'Twitter Share');" />
                 </span>
               </network>
               <network network="whatsapp">
                 <span style="font-size: 1.5em; color: #43d854; padding: 0 10px;">
-                  <i class="fab fa-whatsapp" />
+                  <i
+                    class="fab fa-whatsapp"
+                    onclick="ga(‘send’, ‘event’, 'Social Share', 'Whatsapp Share');" />
                 </span>
               </network>
             </div>
