@@ -91,7 +91,7 @@
       </Grid>
     </div>
     <p class="instructions">
-      Do you feel like you spend a lot of time watching <span class="hashtag">#Netflix</span>? If yes, then it's time to find out exactly how much!
+      Do you feel like you spend a lot of time watching <span class="hashtag">#Netflix</span>? If yes, then it's time to find out exactly how much you have binged in 2019!
     </p>
     <br>
     <p class="instructions">
