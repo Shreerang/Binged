@@ -117,6 +117,8 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
       var cnt = 0
       var movie_tv_id = ''
       var movie_tv_type = ''
+      var movie_cnt = 0
+      var tv_cnt = 0
 
       const jsonHasKeyVal = (json, keyname, value) =>
         JSON.stringify(json.find(obj => obj[keyname] === value))
@@ -141,9 +143,11 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
           if (movie_obj !== undefined) {
             movie_tv_id = JSON.parse(movie_obj)['id']
             movie_tv_type = 'movie'
+            movie_cnt = movie_cnt + 1
           } else if (movie_tv_obj !== undefined) {
             movie_tv_id = JSON.parse(movie_tv_obj)['id']
             movie_tv_type = 'tv'
+            tv_cnt = tv_cnt + 1
           } else {
             movie_tv_type = ''
             movie_tv_id = ''
@@ -164,12 +168,32 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
 
       const finalNetflix = await fetchDetails(finalResult)
       let time = 0
+      let genres_arr = []
+      let genres_obj = { ID: 'Genre' }
+      //let genres_mapped_to_arr = []
       for (let k = 0; k < finalNetflix.length; k++) {
         if (finalNetflix[k].RunTime) {
           time = time + finalNetflix[k].Count * finalNetflix[k].RunTime
         }
+        if (finalNetflix[k].Genres) {
+          for (let l = 0; l < finalNetflix[k].Genres.length; l++) {
+            genres_arr.push(finalNetflix[k].Genres[l].name)
+          }
+        }
       }
-      finalNetflix.push({ totalTime: time })
+      for (var m = 0, n = genres_arr.length; m < n; m++) {
+        if (genres_obj[genres_arr[m]]) {
+          genres_obj[genres_arr[m]]++
+        } else {
+          genres_obj[genres_arr[m]] = 1
+        }
+      }
+      finalNetflix.push({
+        totalTime: time,
+        movie_count: movie_cnt,
+        tv_count: tv_cnt,
+        genres: Object.entries(genres_obj)
+      })
       res.write(JSON.stringify(finalNetflix))
       res.end()
     })
@@ -193,7 +217,8 @@ async function fetchDetails(array) {
             item.media_type +
             '/' +
             item.show_id +
-            '?api_key=' + process.env.API_KEY
+            '?api_key=' +
+            process.env.API_KEY
         )
         .catch(function(error) {
           console.log(error)
@@ -202,6 +227,9 @@ async function fetchDetails(array) {
   }
   await axios.all(shows).then(function(results) {
     results.forEach(function(response, index) {
+      // let genres_mapped_to_arr = response.data.genres.map(d =>
+      //   Array.from(Object.values(d))
+      // )
       bingeList.push(
         Object.assign(
           {},
@@ -213,7 +241,8 @@ async function fetchDetails(array) {
               'http://image.tmdb.org/t/p/w300' + response.data.poster_path,
             RunTime: response.data.episode_run_time
               ? response.data.episode_run_time[0]
-              : response.data.runtime
+              : response.data.runtime,
+            Genres: response.data.genres
           },
           array[index]
         )

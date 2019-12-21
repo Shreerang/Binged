@@ -51,17 +51,40 @@
           </social-sharing>
         </GridItem>
       </Grid>
+      <Grid :columns="{xs: 1, sm: 2, md: 2, lg: 2}">
+        <GridItem>
+          <p>Most watched - Movies or Series?</p>
+          <GChart
+            :data="[
+              ['Content', 'Count'],
+              ['TV Series', movies[movies.length - 1].tv_count],
+              ['Movies', movies[movies.length - 1].movie_count]
+            ]"
+            :options="chartOptions"
+            type="PieChart"
+            style="width: 100%;"
+          />
+        </GridItem>
+        <GridItem>
+          <p>Most watched genre!</p>
+          <GChart
+            :data="movies[movies.length - 1].genres"
+            :options="chartOptions2"
+            type="PieChart"
+            style="width: 100%;"
+          />
+        </GridItem>
+      </Grid>
       <Grid :columns="{xs: 3, sm: 4, md: 5, lg: 6}">
         <GridItem
           v-for="(item, index) in movies"
           :key="index">
           <img
             v-if="item.Poster"
-            :src="item.Poster"
+            :src="item.Poster ? item.Poster : '/Binged.png'"
             :alt="item.Title">
-          <p
-            v-if="!item.Poster && item.Title"
-            class="no-img">
+          <!-- v-if="!item.Poster && item.Title" -->
+          <p>
             {{ item.Title }}
           </p>
         </GridItem>
@@ -120,6 +143,7 @@ import Grid from '~/components/Grid/Grid'
 import GridItem from '~/components/Grid/GridItem'
 import { RiseLoader } from '@saeris/vue-spinners'
 import SocialSharing from 'vue-social-sharing'
+import { GChart } from 'vue-google-charts'
 
 export default {
   head() {
@@ -164,12 +188,25 @@ export default {
     Grid,
     GridItem,
     RiseLoader,
-    SocialSharing
+    SocialSharing,
+    GChart
   },
   data() {
     return {
       movies: [],
-      spinner: false
+      spinner: false,
+      chartOptions: {
+        chart: {
+          title: 'Viewed Content split by type',
+          subtitle: 'TV Series, Movies watched in 2019'
+        }
+      },
+      chartOptions2: {
+        chart: {
+          title: 'Viewed Content split by genre',
+          subtitle: 'Most watched Genres in 2019'
+        }
+      }
     }
   },
   methods: {
