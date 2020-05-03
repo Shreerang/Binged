@@ -5,13 +5,13 @@
         <GridItem>
           <p class="time">{{ convertMinutes(movies[movies.length - 1].totalTime) }}</p>
           <social-sharing
-            :description="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
-            :title="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
-            :quote="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
+            :description="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 while I #ShelterInPlace ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
+            :title="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 while I #ShelterInPlace ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
+            :quote="'I spent ' + convertMinutes(movies[movies.length - 1].totalTime) + '. watching @netflix' + ' 📺 while I #ShelterInPlace ' + 'Checkout how much you Binged at https://binged.herokuapp.com'"
             url = "https://binged.herokuapp.com"
-            hashtags="binged, netflix, 2019"
+            hashtags="binged, netflix, 2020, covid-19, ShelterInPlace, StayHome, NetflixAndChill, StaySafe"
             inline-template>
-            <div>
+            <div class="social-share">
               <network network="facebook">
                 <span style="font-size: 1.5em; color: #3b5998; padding: 0 10px;">
                   <i
@@ -51,7 +51,7 @@
           </social-sharing>
         </GridItem>
       </Grid>
-      <Grid :columns="{xs: 1, sm: 2, md: 2, lg: 2}">
+      <!-- <Grid :columns="{xs: 1, sm: 2, md: 2, lg: 2}">
         <GridItem>
           <p>Most watched - Movies or Series?</p>
           <GChart
@@ -74,13 +74,13 @@
             style="width: 100%;"
           />
         </GridItem>
-      </Grid>
-      <Grid :columns="{xs: 3, sm: 4, md: 5, lg: 6}">
+      </Grid> -->
+      <Grid :columns="{xs: 2, sm: 4, md: 5, lg: 6}">
         <GridItem
           v-for="(item, index) in movies"
+          v-if="item.Title"
           :key="index">
           <img
-            v-if="item.Poster"
             :src="item.Poster ? item.Poster : '/Binged.png'"
             :alt="item.Title">
           <!-- v-if="!item.Poster && item.Title" -->
@@ -91,7 +91,19 @@
       </Grid>
     </div>
     <p class="instructions">
-      Do you feel like you spend a lot of time watching <span class="hashtag">#Netflix</span>? If yes, then it's time to find out exactly how much you have binged in 2019!
+      Have you been watching a lot on <span class="hashtag">#Netflix</span> while you <span class="hashtag">#ShelterInPlace</span> during these unusual times?
+    </p>
+    <br>
+    <p class="instructions">
+      You are not alone!
+    </p>
+    <br>
+    <p class="instructions">
+      Let's see exactly how much time you spent <span class="hashtag">#BingeWatching</span>
+    </p>
+    <br>
+    <p class="instructions">
+      Before you proceed, please <span class="hashtag">#StayHome🏠 #StaySafe❤️</span> and <span class="hashtag">#SafeLives🧬</span>
     </p>
     <br>
     <p class="instructions">
@@ -105,9 +117,11 @@
       <li>Click on your profile</li>
       <li>Hover over your avatar icon in the top right corner</li>
       <li>Click on Account</li>
-      <li>Scroll to the bottom until you see "Viewing Activity". Click the link.</li>
+      <li>Click on your profile under the section marked "PROFILE & PARENTAL CONTROLS"</li>
+      <li>Scroll a little until you see "Viewing Activity". Click the link.</li>
       <li>You will see your viewing history; latest first. Scroll to the bottom and click on the "Download all" link.</li>
       <li>This will download a CSV file which you can upload here.</li>
+      <li><strong>Please note:</strong> We do not save or share your viewing history!</li>
     </ol>
     <Grid :columns="{xs: 1, sm: 3, md: 3, lg: 3}">
       <GridItem>
@@ -243,6 +257,7 @@ export default {
         .post('/api/upload', formData, options)
         .then(function(response) {
           self.movies = response.data
+          window.scrollTo(0, 0)
           self.spinner = false
         })
         .catch(function(error) {
@@ -256,6 +271,10 @@ export default {
 <style>
 .content {
   min-height: calc(100vh - 76px - 106px);
+}
+
+.social-share {
+  padding: 10px 0;
 }
 
 img {

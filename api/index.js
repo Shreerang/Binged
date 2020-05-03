@@ -88,7 +88,11 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
   fs.createReadStream(file.path)
     .pipe(csv())
     .on('data', d => {
-      if (typeof d.Date === 'string' && d.Date.split('/')[2] === '19') {
+      if (
+        typeof d.Date === 'string' &&
+        (d.Date.split('/')[0] >= '3' && d.Date.split('/')[0] <= '5') &&
+        d.Date.split('/')[2] === '20'
+      ) {
         results.push(d)
       }
     })
@@ -126,6 +130,7 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
       for (var i = 0; i < skimmedResults.length; i++) {
         if (skimmedResults[i] != current) {
           if (cnt > 0 && movie_tv_type !== '' && movie_tv_id !== '') {
+            console.log('ID is:', movie_tv_id)
             finalResult.push({
               Title: current,
               show_id: movie_tv_id,
@@ -157,6 +162,7 @@ app.post('/upload', upload.single('myfile'), (req, res, next) => {
         }
       }
       if (cnt > 0 && movie_tv_type !== '' && movie_tv_id !== '') {
+        console.log('ID is:', movie_tv_id)
         finalResult.push({
           Title: current,
           show_id: movie_tv_id,
@@ -237,8 +243,9 @@ async function fetchDetails(array) {
             Title: response.data.title
               ? response.data.title
               : response.data.name,
-            Poster:
-              'http://image.tmdb.org/t/p/w300' + response.data.poster_path,
+            Poster: response.data.poster_path
+              ? 'http://image.tmdb.org/t/p/w300' + response.data.poster_path
+              : '',
             RunTime: response.data.episode_run_time
               ? response.data.episode_run_time[0]
               : response.data.runtime,

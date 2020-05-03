@@ -53,6 +53,7 @@ No media query since the extra-large breakpoint has no upper bound on its width 
   grid-row-gap: 10px;
   grid-template-columns: var(--default-columns);
   overflow-x: auto;
+  padding: 10px 0;
 }
 
 /* Large devices (desktops, less than 1200px) */

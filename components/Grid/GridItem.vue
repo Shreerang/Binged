@@ -12,7 +12,6 @@ export default {
 
 <style scoped>
 .nugget-grid-item {
-  padding: 10px;
   text-align: center;
 }
 </style>
